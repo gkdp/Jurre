@@ -110,8 +110,8 @@ const Home = () => {
       <div className="fullscreen">
         <div className="information">
           <div className="image">
-            <img src="/02-2020/photo.jpg" alt="Profielfoto" className="profile" />
-            <img src="/02-2020/photo.svg" alt="Profielfoto" className="profile-svg" />
+            <img src="/04-2020/photo.jpg" alt="Profielfoto" className="profile" />
+            <img src="/04-2020/photo.svg" alt="Profielfoto" className="profile-svg" />
           </div>
           <div className="details">
             <div className="title">Jurre de Jongh</div>
@@ -133,16 +133,15 @@ const Home = () => {
                 <a href="https://bunq.me/jurre" target="_blank" className="social-link" style={{ marginTop: -1 }}>
                   <svg className="social" fill="#33A0FF" role="img" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><title>Buy Me A Coffee</title><g><path fill="#000" d="M139.3 67.3a94.83 94.83 0 0 1-26.4-53.5A16.11 16.11 0 0 0 96.8 0H80.4a16.31 16.31 0 0 0-16.3 18 145.36 145.36 0 0 0 40.6 84.4 81.22 81.22 0 0 1 22.4 44.1 16.23 16.23 0 0 0 16 13.5h16.5c9.8 0 17.6-8.5 16.3-18a130.72 130.72 0 0 0-36.6-74.7zM287.9 142a130.72 130.72 0 0 0-36.6-74.7 94.83 94.83 0 0 1-26.4-53.5A16.11 16.11 0 0 0 208.8 0h-16.4c-9.8 0-17.5 8.5-16.3 18a145.36 145.36 0 0 0 40.6 84.4 81.22 81.22 0 0 1 22.4 44.1 16.23 16.23 0 0 0 16 13.5h16.5c9.8 0 17.6-8.5 16.3-18z" opacity="0.4"></path><path fill="#000" d="M400 192H32a32 32 0 0 0-32 32v192a96 96 0 0 0 96 96h192a96 96 0 0 0 96-96h16a112 112 0 0 0 0-224zm0 160h-16v-96h16a48 48 0 0 1 0 96z"></path></g></svg>
                 </a>
-                {/* <a href="mailto:ik@jur.re" target="_blank" className="social-link">
-                  <svg className="social" fill="#33A0FF" role="img" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><title>Contact</title><path fill="#181717" d="M502.3 190.8c3.9-3.1 9.7-.2 9.7 4.7V400c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V195.6c0-5 5.7-7.8 9.7-4.7 22.4 17.4 52.1 39.5 154.1 113.6 21.1 15.4 56.7 47.8 92.2 47.6 35.7.3 72-32.8 92.3-47.6 102-74.1 131.6-96.3 154-113.7zM256 320c23.2.4 56.6-29.2 73.4-41.4 132.7-96.3 142.8-104.7 173.4-128.7 5.8-4.5 9.2-11.5 9.2-18.9v-19c0-26.5-21.5-48-48-48H48C21.5 64 0 85.5 0 112v19c0 7.4 3.4 14.3 9.2 18.9 30.6 23.9 40.7 32.4 173.4 128.7 16.8 12.2 50.2 41.8 73.4 41.4z"></path></svg>
-                </a> */}
               </div>
             </div>
           </div>
         </div>
+
+        <div className="scroll-helper">Scroll omlaag</div>
       </div>
 
-      <div className="fullscreen lighter" style={{ display: 'hidden' }}>
+      <div className="fullscreen lighter" style={{ display: 'none' }}>
         <div className="fullscreen-inner">
           <div className="halve">
             <h1>Over mij</h1>
@@ -162,6 +161,8 @@ const Home = () => {
           </div>
         </div>
       </div>
+
+      <div className="divider"></div>
 
       <Async promiseFn={loadPhotos}>
         {({ data, err, isLoading }) => {
@@ -245,6 +246,12 @@ const Home = () => {
           display: flex;
         }
 
+        .divider {
+          height: auto;
+          border-top: 1px solid #f2f2f2;
+          margin-bottom: 5rem;
+        }
+
         @keyframes fadeInImg {
           from {
             opacity: 0
@@ -300,6 +307,14 @@ const Home = () => {
       <style jsx>{`
         .information {
           display: flex;
+        }
+
+        .scroll-helper {
+          position: absolute;
+          bottom: 2rem;
+          font-size: 14px;
+          color: #dbdbdb;
+          pointer-events: none;
         }
 
         .halve {
@@ -402,13 +417,13 @@ const Home = () => {
         }
 
         .social-link {
-          margin-right: .5rem;
+          margin-right: .6rem;
           display: inline-flex;
         }
 
         .social {
-          width: 16px;
-          height: 16px;
+          width: 17px;
+          height: 17px;
         }
 
         .social:hover {
