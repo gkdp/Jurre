@@ -25,6 +25,7 @@
     "react-lazy-load": "^3.0.13",
     "react-lazyload": "^2.6.5",
     "react-photo-gallery": "^8.0.0",
+    "smoothscroll-polyfill": "^0.4.4",
     "vivus": "^0.4.5"
   }
 }

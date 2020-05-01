@@ -10,6 +10,16 @@ const loadPhotos = () =>
     .then(res => (res.ok ? res : Promise.reject(res)))
     .then(res => res.json())
 
+const scrollElementIntoView = (element, behavior) => {
+  let scrollTop = window.pageYOffset || element.scrollTop
+  const finalOffset = element.getBoundingClientRect().top + scrollTop
+
+  window.parent.scrollTo({
+    top: finalOffset,
+    behavior: behavior || 'auto'
+  })
+}
+
 const RenderImage = ({ index, photo, onClick }) => {
   const [loaded, setLoaded] = useState(false);
 
@@ -138,7 +148,15 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="scroll-helper">Scroll omlaag</div>
+        <div className="bottom-helper">
+          <div className="links">
+            <a href="#photos" onClick={(e) => { e.preventDefault(); scrollElementIntoView(document.getElementById("photos"), 'smooth') }} className="link">
+              <span>Foto's</span>
+            </a>
+          </div>
+        </div>
+
+        {/* <div className="scroll-helper">Scroll omlaag</div> */}
       </div>
 
       <div className="fullscreen lighter" style={{ display: 'none' }}>
@@ -162,7 +180,7 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="divider"></div>
+      <div className="divider" id="photos"></div>
 
       <Async promiseFn={loadPhotos}>
         {({ data, err, isLoading }) => {
@@ -309,12 +327,36 @@ const Home = () => {
           display: flex;
         }
 
-        .scroll-helper {
+        .bottom-helper {
           position: absolute;
           bottom: 2rem;
           font-size: 14px;
           color: #dbdbdb;
+        }
+
+        .scroll-helper {
+          position: absolute;
+          bottom: 2rem;
+          font-size: 14px;
           pointer-events: none;
+        }
+
+        .links {
+          display: flex;
+          color: #dbdbdb;
+        }
+
+        .links .link {
+          color: #dbdbdb;
+          text-decoration: none;
+        }
+
+        .links .link:hover {
+          opacity: 0.7;
+        }
+
+        .links .link:hover span {
+          text-decoration: underline;
         }
 
         .halve {
@@ -407,7 +449,7 @@ const Home = () => {
         }
 
         .description {
-          color: #909090;
+          color: #ababab;
           font-size: 18px;
         }
 
