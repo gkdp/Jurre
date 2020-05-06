@@ -102,7 +102,7 @@ const Home = () => {
         <LazyLoad
           height={photo.height}
           once
-          debounce={200}
+          debounce={0}
           key={key}
         >
           <RenderImage photo={photo} index={index} onClick={onClick} />
