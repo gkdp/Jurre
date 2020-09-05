@@ -31,7 +31,7 @@ const Head = props => (
     <link rel="dns-prefetch" href="//jurre.s3.amazonaws.com" ></link>
     <link rel="dns-prefetch" href="//fonts.gstatic.com" />
     <link
-      href="https://fonts.googleapis.com/css?family=Nunito|Catamaran:700,900"
+      href="https://fonts.googleapis.com/css?family=Nunito:400,700"
       rel="stylesheet"
       type="text/css"
     />
