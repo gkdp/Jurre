@@ -166,6 +166,14 @@ const Home = () => {
         </div>
       </div>
 
+      <div className="divider" id="contact"></div>
+
+      <div className="contact">
+        <div className="section-title">Contact</div>
+
+        <Form />
+      </div>
+
       <div className="divider" id="photos"></div>
 
       <Async promiseFn={loadPhotos}>
@@ -198,14 +206,6 @@ const Home = () => {
           )
         }}
       </Async>
-
-      <div className="divider" id="contact"></div>
-
-      <div className="contact">
-        <div className="section-title">Contact</div>
-
-        <Form />
-      </div>
 
       <style jsx global>{`
         body {
