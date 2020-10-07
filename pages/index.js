@@ -121,7 +121,7 @@ const Home = () => {
       <div className="fullscreen">
         <div className="information">
           <div className="image">
-            <img src="/04-2020/photo-100.jpg" alt="Profielfoto" className="profile" />
+            <img src="/04-2020/photo-300.jpg" alt="Profielfoto" className="profile" />
             <img src="/04-2020/photo.svg" alt="Profielfoto" className="profile-svg" />
           </div>
           <div className="details">
