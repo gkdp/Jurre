@@ -1,15 +1,17 @@
-import React, { useCallback, useState } from 'react';
-import Gallery from 'react-photo-gallery';
-import Lightbox from 'react-image-lightbox';
-import LazyLoad from 'react-lazyload';
-import Head from '../components/head';
-import Form from '../components/form';
-import Async from 'react-async';
+import React, { useCallback, useState } from 'react'
+import Gallery from 'react-photo-gallery'
+import Lightbox from 'react-image-lightbox'
+import LazyLoad from 'react-lazyload'
+import Head from '../components/head'
+import Form from '../components/form'
+import Async from 'react-async'
+import { parse, format } from 'date-fns'
+import { nl } from 'date-fns/locale'
 
 const loadPhotos = () =>
   fetch('https://jurre.s3.amazonaws.com/photos.json')
-    .then(res => (res.ok ? res : Promise.reject(res)))
-    .then(res => res.json())
+    .then((res) => (res.ok ? res : Promise.reject(res)))
+    .then((res) => res.json())
 
 const scrollElementIntoView = (element, behavior) => {
   let scrollTop = window.pageYOffset || element.scrollTop
@@ -17,12 +19,12 @@ const scrollElementIntoView = (element, behavior) => {
 
   window.parent.scrollTo({
     top: finalOffset,
-    behavior: behavior || 'auto'
+    behavior: behavior || 'auto',
   })
 }
 
 const RenderImage = ({ index, photo, onClick }) => {
-  const [loaded, setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(false)
 
   return (
     <>
@@ -51,25 +53,29 @@ const RenderImage = ({ index, photo, onClick }) => {
 }
 
 const RenderTitle = (data) => {
-  if (!data || !data.exif) return;
+  if (!data || !data.exif) return
+
+  const datetime = parse(data.exif.dateTime, 'yyyy:MM:dd HH:mm:ss', new Date())
 
   return (
     <div className="title">
-      <div className="stay">{`${data.exif.dateTime} (${data.exif.width}x${data.exif.height})`}</div>
+      <div className="stay">{`${format(datetime, "d MMMM yyyy 'om' HH:mm", {
+        locale: nl,
+      })} (${data.exif.width}x${data.exif.height})`}</div>
     </div>
   )
 }
 
 const RenderCaption = (data) => {
-  if (!data || !data.exif) return;
+  if (!data || !data.exif) return
 
   let hasLoc = false
 
   if (data.exif.gps) {
-    var exifLong = data.exif.gps.longitude;
-    var exifLongRef = data.exif.gps.longitudeRef;
-    var exifLat = data.exif.gps.latitude;
-    var exifLatRef = data.exif.gps.latitudeRef;
+    var exifLong = data.exif.gps.longitude
+    var exifLongRef = data.exif.gps.longitudeRef
+    var exifLat = data.exif.gps.latitude
+    var exifLatRef = data.exif.gps.latitudeRef
 
     hasLoc = true
   }
@@ -78,68 +84,155 @@ const RenderCaption = (data) => {
     <div className="row">
       <div className="stay">{`${data.exif.make}, ${data.exif.model}`}</div>
       {hasLoc && (
-        <div className="go-right"><a href={`https://www.google.com/maps/place/${exifLat[0]}°${exifLat[1]}'${exifLat[2]}"${exifLatRef}+${exifLong[0]}°${exifLong[1]}'${exifLong[2]}"${exifLongRef}`} className="location-link" target="_blank">Locatie</a></div>
+        <div className="go-right">
+          <a
+            href={`https://www.google.com/maps/place/${exifLat[0]}°${exifLat[1]}'${exifLat[2]}"${exifLatRef}+${exifLong[0]}°${exifLong[1]}'${exifLong[2]}"${exifLongRef}`}
+            className="location-link"
+            target="_blank"
+          >
+            Locatie
+          </a>
+        </div>
       )}
     </div>
   )
 }
 
 const Home = () => {
-  const [currentImage, setCurrentImage] = useState(0);
-  const [viewerIsOpen, setViewerIsOpen] = useState(false);
+  const [currentImage, setCurrentImage] = useState(0)
+  const [viewerIsOpen, setViewerIsOpen] = useState(false)
 
   const openLightbox = useCallback((_event, { index }) => {
-    setCurrentImage(index);
-    setViewerIsOpen(true);
-  }, []);
+    setCurrentImage(index)
+    setViewerIsOpen(true)
+  }, [])
 
   const closeLightbox = () => {
-    setViewerIsOpen(false);
-  };
+    setViewerIsOpen(false)
+  }
 
   const imageRenderer = useCallback(({ index, key, photo, onClick }) => {
     return (
-      <div className="LazyLoad img-lazy" style={{ width: photo.width, height: photo.height }} key={'p-' + index}>
-        <LazyLoad
-          height={photo.height}
-          once
-          debounce={0}
-          key={key}
-        >
+      <div
+        className="LazyLoad img-lazy"
+        style={{ width: photo.width, height: photo.height }}
+        key={'p-' + index}
+      >
+        <LazyLoad height={photo.height} once debounce={0} key={key}>
           <RenderImage photo={photo} index={index} onClick={onClick} />
         </LazyLoad>
       </div>
     )
-  }, []);
+  }, [])
 
-  const getAge = birthDate => Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e+10);
+  const getAge = (birthDate) =>
+    Math.floor((new Date() - new Date(birthDate).getTime()) / 3.15576e10)
 
   return (
     <div>
-      <Head title="Jurre de Jongh" description={`Een ${getAge('1997-09-26')} jarige Software Engineer.`} />
+      <Head
+        title="Jurre de Jongh"
+        description={`Een ${getAge('1997-09-26')} jarige Software Engineer.`}
+      />
 
       <div className="fullscreen">
         <div className="information">
           <div className="image">
-            <img src="/04-2020/photo-300.jpg" alt="Profielfoto" className="profile" />
-            <img src="/04-2020/photo.svg" alt="Profielfoto" className="profile-svg" />
+            <img
+              src="/04-2020/photo-300.jpg"
+              alt="Profielfoto"
+              className="profile"
+            />
+            <img
+              src="/04-2020/photo.svg"
+              alt="Profielfoto"
+              className="profile-svg"
+            />
           </div>
           <div className="details">
             <div className="title">Jurre de Jongh</div>
             <div className="description">
               <span>Software Engineer</span>
+
               <div className="socials">
-                <a href="https://linkedin.com/in/jurre-de-jongh" target="_blank" className="social-link" rel="noopener" title="LinkedIn">
-                  <svg className="social" fill="#0077B5" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /></svg>
+                <a
+                  href="https://linkedin.com/in/jurre-de-jongh"
+                  target="_blank"
+                  className="social-link"
+                  rel="noopener"
+                  title="LinkedIn"
+                >
+                  <svg
+                    className="social"
+                    fill="#0077B5"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                  </svg>
                 </a>
-                <a href="https://github.com/gkdp" target="_blank" className="social-link" rel="noopener" title="GitHub">
-                  <svg className="social" fill="#181717" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+                <a
+                  href="https://github.com/gkdp"
+                  target="_blank"
+                  className="social-link"
+                  rel="noopener"
+                  title="GitHub"
+                >
+                  <svg
+                    className="social"
+                    fill="#181717"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+                  </svg>
                 </a>
-                <a href="https://medium.com/@dastint" target="_blank" className="social-link" rel="noopener" title="Medium">
-                  <svg className="social" fill="#12100E" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0v24h24V0H0zm19.938 5.686L18.651 6.92a.376.376 0 0 0-.143.362v9.067a.376.376 0 0 0 .143.361l1.257 1.234v.271h-6.322v-.27l1.302-1.265c.128-.128.128-.165.128-.36V8.99l-3.62 9.195h-.49L6.69 8.99v6.163a.85.85 0 0 0 .233.707l1.694 2.054v.271H3.815v-.27L5.51 15.86a.82.82 0 0 0 .218-.707V8.027a.624.624 0 0 0-.203-.527L4.019 5.686v-.27h4.674l3.613 7.923 3.176-7.924h4.456v.271z"/></svg>
+                <a
+                  href="https://medium.com/@dastint"
+                  target="_blank"
+                  className="social-link"
+                  rel="noopener"
+                  title="Medium"
+                >
+                  <svg
+                    className="social"
+                    fill="#12100E"
+                    role="img"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M0 0v24h24V0H0zm19.938 5.686L18.651 6.92a.376.376 0 0 0-.143.362v9.067a.376.376 0 0 0 .143.361l1.257 1.234v.271h-6.322v-.27l1.302-1.265c.128-.128.128-.165.128-.36V8.99l-3.62 9.195h-.49L6.69 8.99v6.163a.85.85 0 0 0 .233.707l1.694 2.054v.271H3.815v-.27L5.51 15.86a.82.82 0 0 0 .218-.707V8.027a.624.624 0 0 0-.203-.527L4.019 5.686v-.27h4.674l3.613 7.923 3.176-7.924h4.456v.271z" />
+                  </svg>
                 </a>
-                <a href="https://bunq.me/jurre" target="_blank" className="social-link" rel="noopener" title="Donneer een koffie" style={{ marginTop: -1 }}>
-                  <svg className="social" fill="#33A0FF" role="img" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg"><g><path fill="#000" d="M139.3 67.3a94.83 94.83 0 0 1-26.4-53.5A16.11 16.11 0 0 0 96.8 0H80.4a16.31 16.31 0 0 0-16.3 18 145.36 145.36 0 0 0 40.6 84.4 81.22 81.22 0 0 1 22.4 44.1 16.23 16.23 0 0 0 16 13.5h16.5c9.8 0 17.6-8.5 16.3-18a130.72 130.72 0 0 0-36.6-74.7zM287.9 142a130.72 130.72 0 0 0-36.6-74.7 94.83 94.83 0 0 1-26.4-53.5A16.11 16.11 0 0 0 208.8 0h-16.4c-9.8 0-17.5 8.5-16.3 18a145.36 145.36 0 0 0 40.6 84.4 81.22 81.22 0 0 1 22.4 44.1 16.23 16.23 0 0 0 16 13.5h16.5c9.8 0 17.6-8.5 16.3-18z" opacity="0.4"></path><path fill="#000" d="M400 192H32a32 32 0 0 0-32 32v192a96 96 0 0 0 96 96h192a96 96 0 0 0 96-96h16a112 112 0 0 0 0-224zm0 160h-16v-96h16a48 48 0 0 1 0 96z"></path></g></svg>
+                <a
+                  href="https://bunq.me/jurre"
+                  target="_blank"
+                  className="social-link"
+                  rel="noopener"
+                  title="Donneer een koffie"
+                  style={{ marginTop: -1 }}
+                >
+                  <svg
+                    className="social"
+                    fill="#33A0FF"
+                    role="img"
+                    viewBox="0 0 512 512"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g>
+                      <path
+                        fill="#000"
+                        d="M139.3 67.3a94.83 94.83 0 0 1-26.4-53.5A16.11 16.11 0 0 0 96.8 0H80.4a16.31 16.31 0 0 0-16.3 18 145.36 145.36 0 0 0 40.6 84.4 81.22 81.22 0 0 1 22.4 44.1 16.23 16.23 0 0 0 16 13.5h16.5c9.8 0 17.6-8.5 16.3-18a130.72 130.72 0 0 0-36.6-74.7zM287.9 142a130.72 130.72 0 0 0-36.6-74.7 94.83 94.83 0 0 1-26.4-53.5A16.11 16.11 0 0 0 208.8 0h-16.4c-9.8 0-17.5 8.5-16.3 18a145.36 145.36 0 0 0 40.6 84.4 81.22 81.22 0 0 1 22.4 44.1 16.23 16.23 0 0 0 16 13.5h16.5c9.8 0 17.6-8.5 16.3-18z"
+                        opacity="0.4"
+                      ></path>
+                      <path
+                        fill="#000"
+                        d="M400 192H32a32 32 0 0 0-32 32v192a96 96 0 0 0 96 96h192a96 96 0 0 0 96-96h16a112 112 0 0 0 0-224zm0 160h-16v-96h16a48 48 0 0 1 0 96z"
+                      ></path>
+                    </g>
+                  </svg>
                 </a>
               </div>
             </div>
@@ -148,7 +241,17 @@ const Home = () => {
 
         <div className="bottom-helper">
           <div className="links">
-            <a href="#photos" onClick={(e) => { e.preventDefault(); scrollElementIntoView(document.getElementById('photos'), 'smooth') }} className="link">
+            <a
+              href="#photos"
+              onClick={(e) => {
+                e.preventDefault()
+                scrollElementIntoView(
+                  document.getElementById('photos'),
+                  'smooth'
+                )
+              }}
+              className="link"
+            >
               <span>Foto's</span>
             </a>
 
@@ -156,7 +259,17 @@ const Home = () => {
               <span>Blog</span>
             </a>
 
-            <a href="#contact" onClick={(e) => { e.preventDefault(); scrollElementIntoView(document.getElementById('contact'), 'smooth') }} className="link">
+            <a
+              href="#contact"
+              onClick={(e) => {
+                e.preventDefault()
+                scrollElementIntoView(
+                  document.getElementById('contact'),
+                  'smooth'
+                )
+              }}
+              className="link"
+            >
               <span className="bold">Contact</span>
             </a>
           </div>
@@ -189,14 +302,39 @@ const Home = () => {
 
               {viewerIsOpen ? (
                 <Lightbox
-                  mainSrc={data[currentImage].src.replace('thumbnail', 'processed')}
+                  mainSrc={data[currentImage].src.replace(
+                    'thumbnail',
+                    'processed'
+                  )}
                   onCloseRequest={closeLightbox}
-                  nextSrc={data[(currentImage + 1) % data.length].src.replace('thumbnail', 'processed')}
-                  prevSrc={data[(currentImage + data.length - 1) % data.length].src.replace('thumbnail', 'processed')}
-                  onMovePrevRequest={() => setCurrentImage((currentImage + data.length - 1) % data.length)}
-                  onMoveNextRequest={() => setCurrentImage((currentImage + 1) % data.length)}
+                  nextSrc={data[(currentImage + 1) % data.length].src.replace(
+                    'thumbnail',
+                    'processed'
+                  )}
+                  prevSrc={data[
+                    (currentImage + data.length - 1) % data.length
+                  ].src.replace('thumbnail', 'processed')}
+                  onMovePrevRequest={() =>
+                    setCurrentImage(
+                      (currentImage + data.length - 1) % data.length
+                    )
+                  }
+                  onMoveNextRequest={() =>
+                    setCurrentImage((currentImage + 1) % data.length)
+                  }
                   imageTitle={RenderTitle(data[currentImage])}
                   imageCaption={RenderCaption(data[currentImage])}
+                  toolbarButtons={[
+                    <a
+                      href={data[currentImage].src.replace(
+                        'thumbnail',
+                        'processed'
+                      )}
+                      target="_blank"
+                      aria-label="Download"
+                      className="ril-download ril__toolbarItemChild ril__builtinButton ril__downloadButton"
+                    ></a>,
+                  ]}
                 />
               ) : null}
             </div>
@@ -265,10 +403,10 @@ const Home = () => {
 
         @keyframes fadeInImg {
           from {
-            opacity: 0
+            opacity: 0;
           }
           to {
-            opacity: 1
+            opacity: 1;
           }
         }
 
@@ -308,7 +446,7 @@ const Home = () => {
           left: 0;
           pointer-events: none;
           z-index: 12;
-          transition: all .4s;
+          transition: all 0.4s;
         }
 
         .img-lazy:hover .img-hover {
@@ -345,7 +483,7 @@ const Home = () => {
         }
 
         .links .link ~ .link {
-          margin-left: .75rem;
+          margin-left: 0.75rem;
         }
 
         .links .link:hover {
@@ -385,7 +523,7 @@ const Home = () => {
         .halve .text a {
           text-decoration: none;
           color: #444;
-          transition: all .2s;
+          transition: all 0.2s;
           display: block;
         }
 
@@ -457,12 +595,12 @@ const Home = () => {
         }
 
         .socials {
-          margin-top: .5rem;
+          margin-top: 0.5rem;
           display: flex;
         }
 
         .social-link {
-          margin-right: .6rem;
+          margin-right: 0.6rem;
           display: inline-flex;
         }
 
@@ -491,6 +629,12 @@ const Home = () => {
         .bold {
           color: #ababab;
           font-weight: bold;
+        }
+
+        .ril__downloadButton {
+          background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMyAxNXY0YzAgMS4xLjkgMiAyIDJoMTRhMiAyIDAgMCAwIDItMnYtNE0xNyA5bC01IDUtNS01TTEyIDEyLjhWMi41Ii8+PC9zdmc+)
+            no-repeat center;
+          display: inherit;
         }
 
         @media (max-width: 1092px) {
@@ -549,7 +693,7 @@ const Home = () => {
         }
       `}</style>
     </div>
-  );
-};
+  )
+}
 
-export default Home;
+export default Home
