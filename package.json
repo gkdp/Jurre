@@ -6,6 +6,7 @@
     "url": "https://github.com/zeit/now/tree/master/examples/nextjs"
   },
   "license": "MIT",
+  "prettier": "@gkdp/prettier-config",
   "scripts": {
     "dev": "next",
     "build": "next build",
@@ -28,5 +29,8 @@
     "react-photo-gallery": "^8.0.0",
     "smoothscroll-polyfill": "^0.4.4",
     "vivus": "^0.4.5"
+  },
+  "devDependencies": {
+    "@gkdp/prettier-config": "^1.0.0"
   }
 }

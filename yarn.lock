@@ -1014,6 +1014,11 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
+"@gkdp/prettier-config@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@gkdp/prettier-config/-/prettier-config-1.0.0.tgz#a2b6d9eaaeebd8ed69cb40cb970ed13564110a84"
+  integrity sha512-IryvnW6VSwT+rpvGk2SpL5KLGbu5eGd2dVXY2U6x+H1TJ+TmtrmXErHrhnZuNNgNnO0Z1ic2D1cIMeLNQvMhGg==
+
 "@hapi/accept@5.0.1":
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/@hapi/accept/-/accept-5.0.1.tgz#068553e867f0f63225a506ed74e899441af53e10"

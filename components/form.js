@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react'
+import axios from 'axios'
 
 function Form() {
   const [status, setStatus] = useState({
     submitted: false,
     submitting: false,
     info: { error: false, msg: null },
-  });
+  })
 
   const [inputs, setInputs] = useState({
     email: '',
     message: '',
-  });
+  })
 
   const handleServerResponse = (ok, msg) => {
     if (ok) {
@@ -19,53 +19,52 @@ function Form() {
         submitted: true,
         submitting: false,
         info: { error: false, msg: msg },
-      });
+      })
       setInputs({
         email: '',
         message: '',
-      });
+      })
     } else {
       setStatus({
         info: { error: true, msg: msg },
-      });
+      })
     }
-  };
+  }
 
   const handleOnChange = (e) => {
-    e.persist();
+    e.persist()
     setInputs((prev) => ({
       ...prev,
       [e.target.id]: e.target.value,
-    }));
+    }))
     setStatus({
       submitted: false,
       submitting: false,
       info: { error: false, msg: null },
-    });
-  };
+    })
+  }
 
   const handleOnSubmit = (e) => {
-    e.preventDefault();
-    setStatus((prevStatus) => ({ ...prevStatus, submitting: true }));
+    e.preventDefault()
+    setStatus((prevStatus) => ({ ...prevStatus, submitting: true }))
     axios({
       method: 'POST',
       url: 'https://formspree.io/mzbjndev',
       data: inputs,
     })
       .then((response) => {
-        handleServerResponse(
-          true,
-          'Bedankt! Uw bericht is verstuurd.'
-        );
+        handleServerResponse(true, 'Bedankt! Uw bericht is verstuurd.')
       })
       .catch((error) => {
-        handleServerResponse(false, error.response.data.error);
-      });
-  };
+        handleServerResponse(false, error.response.data.error)
+      })
+  }
 
   return (
     <form onSubmit={handleOnSubmit}>
-      <label htmlFor="email" className="label">E-mail</label>
+      <label htmlFor="email" className="label">
+        E-mail
+      </label>
       <input
         id="email"
         type="email"
@@ -76,7 +75,9 @@ function Form() {
         value={inputs.email}
       />
 
-      <label htmlFor="message" className="label">Bericht</label>
+      <label htmlFor="message" className="label">
+        Bericht
+      </label>
       <textarea
         id="message"
         name="message"
@@ -109,18 +110,18 @@ function Form() {
         }
 
         .label {
-          margin-bottom: .5rem!important;
-          font-weight: 700!important;
+          margin-bottom: 0.5rem !important;
+          font-weight: 700 !important;
         }
 
         .input {
-          padding-left: .75rem!important;
-          padding-right: .75rem!important;
-          padding-top: .5rem!important;
-          padding-bottom: .5rem!important;
-          border-radius: .2rem!important;
-          appearance: none!important;
-          border: 1px solid #e2e8f0;
+          padding-left: 0.75rem !important;
+          padding-right: 0.75rem !important;
+          padding-top: 0.5rem !important;
+          padding-bottom: 0.5rem !important;
+          border-radius: 0.25rem !important;
+          appearance: none !important;
+          border: 2px solid #f2f2f2;
           font-family: inherit;
           font-size: 100%;
           line-height: 1.15;
@@ -132,17 +133,17 @@ function Form() {
         }
 
         .btn {
-          padding-left: 1rem!important;
-          padding-right: 1rem!important;
-          padding-top: .5rem!important;
-          padding-bottom: .5rem!important;
-          border-radius: .2rem!important;
-          background-color: #4299e1!important;
-          --bg-opacity: 1!important;
-          background-color: rgba(66,153,225,var(--bg-opacity))!important;
-          color: #fff!important;
-          --text-opacity: 1!important;
-          color: rgba(255,255,255,var(--text-opacity))!important;
+          padding-left: 1rem !important;
+          padding-right: 1rem !important;
+          padding-top: 0.5rem !important;
+          padding-bottom: 0.5rem !important;
+          border-radius: 0.2rem !important;
+          background-color: #4299e1 !important;
+          --bg-opacity: 1 !important;
+          background-color: rgba(66, 153, 225, var(--bg-opacity)) !important;
+          color: #fff !important;
+          --text-opacity: 1 !important;
+          color: rgba(255, 255, 255, var(--text-opacity)) !important;
           border: 0;
           -webkit-appearance: button;
           text-transform: none;
@@ -155,13 +156,13 @@ function Form() {
           width: auto;
         }
         .btn:hover {
-          background-color: #2b6cb0!important;
-          --bg-opacity: 1!important;
-          background-color: rgba(43,108,176,var(--bg-opacity))!important;
+          background-color: #2b6cb0 !important;
+          --bg-opacity: 1 !important;
+          background-color: rgba(43, 108, 176, var(--bg-opacity)) !important;
         }
       `}</style>
     </form>
-  );
-};
+  )
+}
 
-export default Form;
+export default Form
