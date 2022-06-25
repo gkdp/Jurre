@@ -255,10 +255,6 @@ const Home = () => {
               <span>Foto's</span>
             </a>
 
-            <a href="https://blog.jur.re" className="link">
-              <span>Blog</span>
-            </a>
-
             <a href="/routes" className="link">
               <span>Wandelroutes</span>
             </a>
